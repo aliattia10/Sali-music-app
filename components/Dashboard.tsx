@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ThemeToggle from './ThemeToggle';
 import { ViewState } from '../types';
 
@@ -6,55 +6,378 @@ interface DashboardProps {
   onNavigate: (view: ViewState) => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
-  return (
-    <div className="flex h-screen w-full overflow-hidden bg-background-light dark:bg-background-dark">
-      {/* Sidebar Navigation */}
-      <aside className="hidden md:flex flex-col w-64 h-full p-6 border-r border-gray-100 dark:border-gray-800 bg-[#fcfcf8] dark:bg-[#1c1c0d]">
-        <div className="flex items-center gap-3 px-2 mb-10 cursor-pointer" onClick={() => onNavigate('landing')}>
-          <div className="size-10 rounded-full bg-dark-card dark:bg-primary flex items-center justify-center text-primary dark:text-black">
-            <span className="material-symbols-outlined">equalizer</span>
-          </div>
-          <div>
-            <h1 className="text-dark-card dark:text-white text-lg font-bold leading-tight">Salimusic</h1>
-            <p className="text-olive-text text-xs font-medium uppercase tracking-wider">Dashboard</p>
-          </div>
-        </div>
-        <nav className="flex flex-col gap-2 flex-1">
-          <button className="flex items-center gap-4 px-4 py-3 rounded-full bg-primary text-dark-card transition-all shadow-sm group">
-            <span className="material-symbols-outlined filled group-hover:scale-110 transition-transform">home</span>
-            <span className="text-sm font-bold">Home</span>
-          </button>
-          <button className="flex items-center gap-4 px-4 py-3 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white transition-all group">
-            <span className="material-symbols-outlined group-hover:scale-110 transition-transform">person</span>
-            <span className="text-sm font-medium">Profile</span>
-          </button>
-          <button className="flex items-center gap-4 px-4 py-3 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white transition-all group">
-            <span className="material-symbols-outlined group-hover:scale-110 transition-transform">shopping_bag</span>
-            <span className="text-sm font-medium">Orders</span>
-          </button>
-          <button className="flex items-center gap-4 px-4 py-3 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white transition-all group">
-            <span className="material-symbols-outlined group-hover:scale-110 transition-transform">favorite</span>
-            <span className="text-sm font-medium">Wishlist</span>
-          </button>
-        </nav>
-        <div className="mt-auto">
-          <button className="flex w-full items-center gap-4 px-4 py-3 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white transition-all">
-            <span className="material-symbols-outlined">settings</span>
-            <span className="text-sm font-medium">Settings</span>
-          </button>
-          <div className="mt-6 p-4 rounded-xl bg-[#f4f4e6] dark:bg-[#2a2a1f] flex items-center gap-3 cursor-pointer hover:opacity-80 transition">
-            <div className="bg-center bg-no-repeat bg-cover rounded-full size-10 shadow-inner" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCV0P0n26NrEzk4SuLUnm-0X62VOsXWODzfetdRcxNXuoYA6-JhRjZmslV1B1IJDvzyfo8Rm7O0CzfauyIWTZ5bLsWTNlwwnufGYKVfWSNviwqXQIkZT6YKsyR-rNPfYmvUnSSCmiBBIe_exUzyBdEkj6tU3RjP7yL57Z8lLnPCOAUViNiPAlf3lRHi8kYYrlGXNsfHkUepZg-EpGaYbTVy6OPt8Krx8bTNFja2cGQZjDbz05_AV9_rnL2piVRUc9Cd9QC2sR-TDKY')" }}></div>
-            <div className="flex flex-col text-left">
-              <span className="text-xs font-bold text-dark-card dark:text-white">Alex Doe</span>
-              <span className="text-[10px] text-olive-text uppercase tracking-wide">Premium User</span>
-            </div>
-          </div>
-        </div>
-      </aside>
+type DashboardTab = 'home' | 'profile' | 'orders' | 'wishlist' | 'settings' | 'cart';
+type CheckoutStep = 'cart' | 'details' | 'success';
 
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col h-full overflow-y-auto scroll-smooth custom-scrollbar">
+const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
+  const [activeTab, setActiveTab] = useState<DashboardTab>('home');
+  const [checkoutStep, setCheckoutStep] = useState<CheckoutStep>('cart');
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  // Mock Cart Data
+  const cartItem = {
+    id: 1,
+    name: "Midnight City Drop Tee",
+    size: "M",
+    price: 45.00,
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBLxW_NjGmNlyoOdSdLF9q7ffanbCDIUL5wpmePL5tpND6kynceWM48gzLGGZKDYQv_F2-HbTiau4sZSrIhyGViVRL27pFuE64hPUzqBFT7pVnaoOduPF-ngicPGOPJDxa-ZUDI3Koau8FDWlD8sk5uULTOoNE8dOrWBUfPQMGIbJGlAMl47NoBetaqhLFkissHGH6fZkiWuxcrgu_z2xsiYIUmRgPO_mhP0HGU8VRTHYWfNwPjqHP4BcuBpKO2Vd947TQe_3d6nHY"
+  };
+
+  const handlePayment = () => {
+    setIsProcessing(true);
+    setTimeout(() => {
+      setIsProcessing(false);
+      setCheckoutStep('success');
+    }, 2000);
+  };
+
+  const renderContent = () => {
+    if (activeTab === 'cart') {
+      if (checkoutStep === 'success') {
+        return (
+          <div className="flex flex-col items-center justify-center h-full min-h-[600px] gap-8 px-6 animate-shimmer" style={{ animation: 'none' }}>
+            <div className="size-32 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-4">
+              <span className="material-symbols-outlined text-6xl text-green-500">check_circle</span>
+            </div>
+            <div className="text-center space-y-2">
+              <h2 className="text-3xl md:text-5xl font-black text-dark-card dark:text-white uppercase tracking-tight">Order Confirmed</h2>
+              <p className="text-gray-500 dark:text-gray-400 font-medium text-lg">Order #88291 is on its way.</p>
+            </div>
+            <div className="bg-white dark:bg-[#1c1c0d] p-8 rounded-[2rem] border border-gray-100 dark:border-gray-800 w-full max-w-md shadow-sm">
+                <div className="flex gap-4 items-center mb-6">
+                    <div className="size-16 bg-gray-100 dark:bg-gray-800 rounded-lg bg-cover bg-center" style={{ backgroundImage: `url('${cartItem.image}')` }}></div>
+                    <div>
+                        <p className="font-bold text-dark-card dark:text-white">{cartItem.name}</p>
+                        <p className="text-sm text-gray-500">Size {cartItem.size} • $45.00</p>
+                    </div>
+                </div>
+                <div className="border-t border-gray-100 dark:border-gray-800 pt-4 space-y-2">
+                    <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Subtotal</span>
+                        <span className="font-medium dark:text-gray-300">$45.00</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Shipping</span>
+                        <span className="font-medium dark:text-gray-300">$12.00</span>
+                    </div>
+                    <div className="flex justify-between text-lg font-bold pt-2 text-dark-card dark:text-white">
+                        <span>Total</span>
+                        <span>$57.00</span>
+                    </div>
+                </div>
+            </div>
+            <button 
+                onClick={() => {
+                    setCheckoutStep('cart');
+                    setActiveTab('home');
+                }}
+                className="px-8 py-4 bg-primary text-black font-bold rounded-full uppercase tracking-wider hover:bg-white hover:scale-105 transition-all shadow-lg shadow-primary/20"
+            >
+                Continue Shopping
+            </button>
+          </div>
+        );
+      }
+
+      return (
+        <div className="flex flex-col gap-8 px-6 md:px-12 pb-12 w-full max-w-6xl mx-auto h-full">
+            {/* Header */}
+            <div className="flex flex-col gap-2 pt-8 shrink-0">
+                <button 
+                    onClick={() => checkoutStep === 'details' ? setCheckoutStep('cart') : setActiveTab('home')}
+                    className="self-start text-xs font-bold text-gray-500 uppercase tracking-widest hover:text-primary transition-colors flex items-center gap-1 mb-2"
+                >
+                    <span className="material-symbols-outlined text-sm">arrow_back</span>
+                    {checkoutStep === 'details' ? 'Back to Bag' : 'Back Home'}
+                </button>
+                <div className="flex items-center justify-between">
+                  <h2 className="text-dark-card dark:text-white text-3xl md:text-5xl font-black leading-tight tracking-tight">
+                    {checkoutStep === 'cart' ? 'Your Bag' : 'Checkout'}
+                  </h2>
+                  <div className="md:hidden">
+                    <ThemeToggle />
+                  </div>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full pb-8">
+                {/* Left Column */}
+                <div className="lg:col-span-7 flex flex-col gap-6">
+                    {checkoutStep === 'cart' ? (
+                        /* Cart List */
+                        <div className="flex flex-col gap-4">
+                             <div className="bg-white dark:bg-[#1c1c0d] p-4 rounded-[2rem] border border-gray-100 dark:border-gray-800 flex gap-6 items-center shadow-sm group">
+                                <div className="size-32 bg-[#f0f0eb] dark:bg-[#2a2a1f] rounded-2xl flex items-center justify-center p-2 shrink-0">
+                                    <img src={cartItem.image} className="max-h-full object-contain mix-blend-multiply dark:mix-blend-normal" alt="Product" />
+                                </div>
+                                <div className="flex flex-col flex-1 py-2">
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <h3 className="font-bold text-xl text-dark-card dark:text-white">{cartItem.name}</h3>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Limited Edition • Drop 003</p>
+                                        </div>
+                                        <button className="text-gray-400 hover:text-red-500 transition-colors">
+                                            <span className="material-symbols-outlined">delete</span>
+                                        </button>
+                                    </div>
+                                    <div className="flex items-end justify-between mt-auto">
+                                        <div className="flex items-center gap-3">
+                                            <div className="px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-lg text-sm font-bold border border-gray-200 dark:border-gray-700">Size: {cartItem.size}</div>
+                                            <div className="flex items-center gap-2 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                                <button className="size-6 flex items-center justify-center hover:bg-white dark:hover:bg-gray-700 rounded-md transition-colors">-</button>
+                                                <span className="text-sm font-bold w-4 text-center">1</span>
+                                                <button className="size-6 flex items-center justify-center hover:bg-white dark:hover:bg-gray-700 rounded-md transition-colors">+</button>
+                                            </div>
+                                        </div>
+                                        <p className="text-xl font-bold font-mono">${cartItem.price.toFixed(2)}</p>
+                                    </div>
+                                </div>
+                             </div>
+                             {/* Cross Sell */}
+                             <div className="mt-4">
+                                <p className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-4">You might also like</p>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="bg-white dark:bg-[#1c1c0d] p-3 rounded-2xl border border-gray-100 dark:border-gray-800 flex items-center gap-3 cursor-pointer hover:border-primary transition-colors">
+                                        <div className="size-16 bg-gray-100 dark:bg-gray-800 rounded-xl"></div>
+                                        <div className="flex flex-col">
+                                            <span className="font-bold text-sm text-dark-card dark:text-white">Cap</span>
+                                            <span className="text-xs text-gray-500">$25.00</span>
+                                        </div>
+                                        <button className="ml-auto size-8 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center">
+                                            <span className="material-symbols-outlined text-sm">add</span>
+                                        </button>
+                                    </div>
+                                    <div className="bg-white dark:bg-[#1c1c0d] p-3 rounded-2xl border border-gray-100 dark:border-gray-800 flex items-center gap-3 cursor-pointer hover:border-primary transition-colors">
+                                        <div className="size-16 bg-gray-100 dark:bg-gray-800 rounded-xl"></div>
+                                        <div className="flex flex-col">
+                                            <span className="font-bold text-sm text-dark-card dark:text-white">Socks</span>
+                                            <span className="text-xs text-gray-500">$15.00</span>
+                                        </div>
+                                        <button className="ml-auto size-8 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center">
+                                            <span className="material-symbols-outlined text-sm">add</span>
+                                        </button>
+                                    </div>
+                                </div>
+                             </div>
+                        </div>
+                    ) : (
+                        /* Checkout Form */
+                        <div className="flex flex-col gap-6 animate-shimmer" style={{ animation: 'none' }}>
+                            {/* Shipping */}
+                            <div className="flex flex-col gap-4">
+                                <h3 className="font-bold text-lg text-dark-card dark:text-white flex items-center gap-2">
+                                    <span className="size-6 rounded-full bg-primary text-black flex items-center justify-center text-xs">1</span>
+                                    Shipping Information
+                                </h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <input type="text" placeholder="First Name" className="w-full px-4 py-3 rounded-xl bg-white dark:bg-[#1c1c0d] border border-gray-200 dark:border-gray-800 focus:outline-none focus:border-primary" />
+                                    <input type="text" placeholder="Last Name" className="w-full px-4 py-3 rounded-xl bg-white dark:bg-[#1c1c0d] border border-gray-200 dark:border-gray-800 focus:outline-none focus:border-primary" />
+                                    <input type="text" placeholder="Address" className="col-span-2 w-full px-4 py-3 rounded-xl bg-white dark:bg-[#1c1c0d] border border-gray-200 dark:border-gray-800 focus:outline-none focus:border-primary" />
+                                    <input type="text" placeholder="City" className="w-full px-4 py-3 rounded-xl bg-white dark:bg-[#1c1c0d] border border-gray-200 dark:border-gray-800 focus:outline-none focus:border-primary" />
+                                    <input type="text" placeholder="Postal Code" className="w-full px-4 py-3 rounded-xl bg-white dark:bg-[#1c1c0d] border border-gray-200 dark:border-gray-800 focus:outline-none focus:border-primary" />
+                                </div>
+                            </div>
+
+                            {/* Payment */}
+                            <div className="flex flex-col gap-4 pt-4 border-t border-gray-100 dark:border-gray-800">
+                                <h3 className="font-bold text-lg text-dark-card dark:text-white flex items-center gap-2">
+                                    <span className="size-6 rounded-full bg-primary text-black flex items-center justify-center text-xs">2</span>
+                                    Payment Method
+                                </h3>
+                                
+                                <div className="p-6 rounded-2xl bg-gradient-to-br from-gray-900 to-black text-white shadow-xl relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+                                    <div className="relative z-10 flex flex-col justify-between h-40">
+                                        <div className="flex justify-between items-start">
+                                            <span className="font-mono text-sm opacity-70">Debit</span>
+                                            <span className="material-symbols-outlined text-3xl">contactless</span>
+                                        </div>
+                                        <div className="flex flex-col gap-1">
+                                            <div className="text-2xl font-mono tracking-widest flex gap-4">
+                                                <span>••••</span><span>••••</span><span>••••</span><span>4242</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-between items-end">
+                                            <div className="flex flex-col">
+                                                <span className="text-[10px] uppercase opacity-70 tracking-wider">Cardholder</span>
+                                                <span className="font-bold tracking-wide">ALEX DOE</span>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-[10px] uppercase opacity-70 tracking-wider">Expires</span>
+                                                <span className="font-bold tracking-wide">12/25</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <input type="text" placeholder="Card Number" className="col-span-2 w-full px-4 py-3 rounded-xl bg-white dark:bg-[#1c1c0d] border border-gray-200 dark:border-gray-800 focus:outline-none focus:border-primary" />
+                                    <input type="text" placeholder="MM/YY" className="w-full px-4 py-3 rounded-xl bg-white dark:bg-[#1c1c0d] border border-gray-200 dark:border-gray-800 focus:outline-none focus:border-primary" />
+                                    <input type="text" placeholder="CVC" className="w-full px-4 py-3 rounded-xl bg-white dark:bg-[#1c1c0d] border border-gray-200 dark:border-gray-800 focus:outline-none focus:border-primary" />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Right Column: Summary */}
+                <div className="lg:col-span-5">
+                    <div className="sticky top-8 bg-white dark:bg-[#1c1c0d] p-6 rounded-[2rem] border border-gray-100 dark:border-gray-800 flex flex-col gap-6 shadow-xl shadow-gray-200/50 dark:shadow-none">
+                        <h3 className="text-xl font-bold text-dark-card dark:text-white">Order Summary</h3>
+                        
+                        <div className="flex flex-col gap-3 pb-6 border-b border-gray-100 dark:border-gray-800">
+                            <div className="flex justify-between text-gray-500 dark:text-gray-400">
+                                <span>Subtotal</span>
+                                <span className="font-mono text-dark-card dark:text-white">$45.00</span>
+                            </div>
+                            <div className="flex justify-between text-gray-500 dark:text-gray-400">
+                                <span>Shipping</span>
+                                <span className="font-mono text-dark-card dark:text-white">Calculated at next step</span>
+                            </div>
+                            <div className="flex justify-between text-gray-500 dark:text-gray-400">
+                                <span>Tax</span>
+                                <span className="font-mono text-dark-card dark:text-white">$0.00</span>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-between items-end">
+                            <span className="text-lg font-bold text-dark-card dark:text-white">Total</span>
+                            <div className="flex flex-col items-end">
+                                <span className="text-3xl font-black text-dark-card dark:text-white tracking-tight">$45.00</span>
+                                <span className="text-xs text-gray-400">USD</span>
+                            </div>
+                        </div>
+
+                        {checkoutStep === 'cart' ? (
+                            <button 
+                                onClick={() => setCheckoutStep('details')}
+                                className="w-full py-4 bg-dark-card dark:bg-white text-white dark:text-black font-bold text-lg rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                            >
+                                Proceed to Checkout
+                                <span className="material-symbols-outlined">arrow_forward</span>
+                            </button>
+                        ) : (
+                            <button 
+                                onClick={handlePayment}
+                                disabled={isProcessing}
+                                className="w-full py-4 bg-primary text-black font-bold text-lg rounded-xl hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                            >
+                                {isProcessing ? (
+                                    <span className="flex items-center gap-2">
+                                        <span className="size-4 border-2 border-black border-t-transparent rounded-full animate-spin"></span>
+                                        Processing...
+                                    </span>
+                                ) : (
+                                    <>
+                                        Pay $45.00
+                                        <span className="material-symbols-outlined">lock</span>
+                                    </>
+                                )}
+                            </button>
+                        )}
+                        
+                        <div className="flex items-center justify-center gap-4 text-gray-300 dark:text-gray-700">
+                            <span className="material-symbols-outlined text-2xl">credit_card</span>
+                            <span className="material-symbols-outlined text-2xl">account_balance_wallet</span>
+                            <span className="material-symbols-outlined text-2xl">payments</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      );
+    }
+
+    if (activeTab === 'settings') {
+      return (
+        <div className="flex flex-col gap-8 px-6 md:px-12 pb-12 w-full max-w-5xl mx-auto">
+            {/* Settings Header */}
+            <div className="flex flex-col gap-2 pt-8">
+                <p className="text-olive-text text-sm font-medium tracking-widest uppercase">Preferences</p>
+                <div className="flex items-center justify-between">
+                  <h2 className="text-dark-card dark:text-white text-3xl md:text-5xl font-black leading-tight tracking-tight">Settings</h2>
+                  <div className="md:hidden">
+                    <ThemeToggle />
+                  </div>
+                </div>
+            </div>
+
+            {/* Account Settings */}
+            <section className="flex flex-col gap-6 animate-shimmer" style={{ animation: 'none' }}>
+                <h3 className="text-xl font-bold text-dark-card dark:text-white border-b border-gray-200 dark:border-gray-800 pb-2">Account</h3>
+                <div className="bg-white dark:bg-[#1c1c0d] p-6 rounded-[2rem] border border-gray-100 dark:border-gray-800 flex flex-col md:flex-row gap-8 items-start shadow-sm">
+                    <div className="flex flex-col gap-4 items-center self-center md:self-start">
+                        <div className="size-32 rounded-full bg-gray-200 dark:bg-gray-800 bg-cover bg-center border-4 border-background-light dark:border-background-dark shadow-inner" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCV0P0n26NrEzk4SuLUnm-0X62VOsXWODzfetdRcxNXuoYA6-JhRjZmslV1B1IJDvzyfo8Rm7O0CzfauyIWTZ5bLsWTNlwwnufGYKVfWSNviwqXQIkZT6YKsyR-rNPfYmvUnSSCmiBBIe_exUzyBdEkj6tU3RjP7yL57Z8lLnPCOAUViNiPAlf3lRHi8kYYrlGXNsfHkUepZg-EpGaYbTVy6OPt8Krx8bTNFja2cGQZjDbz05_AV9_rnL2piVRUc9Cd9QC2sR-TDKY')" }}></div>
+                        <button className="text-sm font-bold text-primary hover:text-dark-card dark:hover:text-white transition-colors underline decoration-2 underline-offset-4">Change Avatar</button>
+                    </div>
+                    <div className="flex-1 w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div className="flex flex-col gap-2">
+                            <label className="text-sm font-bold text-gray-500 dark:text-gray-400">Display Name</label>
+                            <input type="text" defaultValue="Alex Doe" className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-background-dark border border-gray-200 dark:border-gray-700 text-dark-card dark:text-white focus:outline-none focus:border-primary transition-colors font-medium" />
+                         </div>
+                         <div className="flex flex-col gap-2">
+                            <label className="text-sm font-bold text-gray-500 dark:text-gray-400">Email Address</label>
+                            <input type="email" defaultValue="alex@example.com" className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-background-dark border border-gray-200 dark:border-gray-700 text-dark-card dark:text-white focus:outline-none focus:border-primary transition-colors font-medium" />
+                         </div>
+                         <div className="flex flex-col gap-2">
+                            <label className="text-sm font-bold text-gray-500 dark:text-gray-400">Spotify Username</label>
+                            <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-background-light dark:bg-background-dark border border-gray-200 dark:border-gray-700 text-gray-500 cursor-not-allowed">
+                                <span className="material-symbols-outlined text-green-500 text-lg">check_circle</span>
+                                <span className="font-medium">alex_doe_88</span>
+                            </div>
+                         </div>
+                         <div className="flex flex-col gap-2 md:col-span-2">
+                           <label className="text-sm font-bold text-gray-500 dark:text-gray-400">Bio</label>
+                           <textarea className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-background-dark border border-gray-200 dark:border-gray-700 text-dark-card dark:text-white focus:outline-none focus:border-primary transition-colors font-medium resize-none h-24" defaultValue="Music lover, streetwear enthusiast, and coffee addict."></textarea>
+                         </div>
+                         <div className="flex flex-col gap-2 justify-end md:col-span-2">
+                            <button className="px-6 py-3 bg-dark-card dark:bg-white text-white dark:text-black font-bold rounded-xl hover:opacity-90 transition-opacity w-full md:w-auto self-end">Save Changes</button>
+                         </div>
+                    </div>
+                </div>
+            </section>
+
+             {/* Notifications */}
+             <section className="flex flex-col gap-6">
+                <h3 className="text-xl font-bold text-dark-card dark:text-white border-b border-gray-200 dark:border-gray-800 pb-2">Notifications</h3>
+                 <div className="bg-white dark:bg-[#1c1c0d] p-6 rounded-[2rem] border border-gray-100 dark:border-gray-800 flex flex-col gap-6 shadow-sm">
+                    {[
+                        { title: 'Drop Alerts', desc: 'Get notified 24h before a new collection drops.', checked: true },
+                        { title: 'Order Updates', desc: 'Receive shipping and delivery updates.', checked: true },
+                        { title: 'Marketing Emails', desc: 'Receive news, promotions, and product updates.', checked: false },
+                    ].map((item, i) => (
+                        <div key={i} className="flex items-center justify-between pb-4 border-b border-gray-50 dark:border-gray-800 last:border-0 last:pb-0">
+                            <div className="flex flex-col pr-4">
+                                <span className="font-bold text-dark-card dark:text-white">{item.title}</span>
+                                <span className="text-sm text-gray-500 dark:text-gray-400">{item.desc}</span>
+                            </div>
+                             <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                                <input type="checkbox" defaultChecked={item.checked} className="sr-only peer" />
+                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+                    ))}
+                 </div>
+             </section>
+
+             {/* Danger Zone */}
+             <section className="flex flex-col gap-6">
+                <h3 className="text-xl font-bold text-red-500 border-b border-gray-200 dark:border-gray-800 pb-2">Danger Zone</h3>
+                <div className="bg-red-50 dark:bg-red-900/10 p-6 rounded-[2rem] border border-red-100 dark:border-red-900/20 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div className="flex flex-col text-center md:text-left">
+                         <span className="font-bold text-red-600 dark:text-red-400">Delete Account</span>
+                         <span className="text-sm text-red-500/70 dark:text-red-400/70">Once you delete your account, there is no going back. Please be certain.</span>
+                    </div>
+                    <button className="px-6 py-3 bg-white dark:bg-red-950 text-red-500 font-bold rounded-xl border border-red-100 dark:border-red-900 hover:bg-red-500 hover:text-white dark:hover:bg-red-900 dark:hover:text-red-100 transition-colors">Delete Account</button>
+                </div>
+             </section>
+        </div>
+      );
+    }
+
+    // Default Home View
+    return (
+        <>
         <header className="w-full px-6 py-8 md:px-12 flex justify-between items-end">
           <div className="flex flex-col gap-2">
             <p className="text-olive-text text-sm font-medium tracking-widest uppercase">Your mix is ready</p>
@@ -199,6 +522,110 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             </div>
           </div>
         </div>
+        </>
+    );
+  };
+
+  return (
+    <div className="flex h-screen w-full overflow-hidden bg-background-light dark:bg-background-dark">
+      {/* Sidebar Navigation */}
+      <aside className="hidden md:flex flex-col w-64 h-full p-6 border-r border-gray-100 dark:border-gray-800 bg-[#fcfcf8] dark:bg-[#1c1c0d]">
+        <div className="flex items-center gap-3 px-2 mb-10 cursor-pointer" onClick={() => onNavigate('landing')}>
+          <div className="size-10 rounded-full bg-dark-card dark:bg-primary flex items-center justify-center text-primary dark:text-black">
+            <span className="material-symbols-outlined">equalizer</span>
+          </div>
+          <div>
+            <h1 className="text-dark-card dark:text-white text-lg font-bold leading-tight">Salimusic</h1>
+            <p className="text-olive-text text-xs font-medium uppercase tracking-wider">Dashboard</p>
+          </div>
+        </div>
+        <nav className="flex flex-col gap-2 flex-1">
+          <button 
+            onClick={() => setActiveTab('home')}
+            className={`flex items-center gap-4 px-4 py-3 rounded-full transition-all shadow-sm group ${
+                activeTab === 'home' 
+                ? 'bg-primary text-dark-card' 
+                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white'
+            }`}
+          >
+            <span className={`material-symbols-outlined ${activeTab === 'home' ? 'filled' : ''} group-hover:scale-110 transition-transform`}>home</span>
+            <span className="text-sm font-bold">Home</span>
+          </button>
+          
+          <button 
+             onClick={() => setActiveTab('cart')}
+             className={`flex items-center gap-4 px-4 py-3 rounded-full transition-all group ${
+                activeTab === 'cart'
+                ? 'bg-primary text-dark-card shadow-sm' 
+                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white'
+            }`}
+          >
+            <div className="relative">
+                <span className={`material-symbols-outlined ${activeTab === 'cart' ? 'filled' : ''} group-hover:scale-110 transition-transform`}>shopping_bag</span>
+                {activeTab !== 'cart' && <span className="absolute -top-1 -right-1 size-3 bg-primary text-[8px] flex items-center justify-center rounded-full text-black font-bold border border-white dark:border-black">1</span>}
+            </div>
+            <span className="text-sm font-medium">Bag</span>
+          </button>
+
+          <button 
+             onClick={() => setActiveTab('profile')}
+             className={`flex items-center gap-4 px-4 py-3 rounded-full transition-all group ${
+                activeTab === 'profile'
+                ? 'bg-primary text-dark-card shadow-sm' 
+                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white'
+            }`}
+          >
+            <span className={`material-symbols-outlined ${activeTab === 'profile' ? 'filled' : ''} group-hover:scale-110 transition-transform`}>person</span>
+            <span className="text-sm font-medium">Profile</span>
+          </button>
+          <button 
+             onClick={() => setActiveTab('orders')}
+             className={`flex items-center gap-4 px-4 py-3 rounded-full transition-all group ${
+                activeTab === 'orders'
+                ? 'bg-primary text-dark-card shadow-sm' 
+                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white'
+            }`}
+          >
+            <span className={`material-symbols-outlined ${activeTab === 'orders' ? 'filled' : ''} group-hover:scale-110 transition-transform`}>list_alt</span>
+            <span className="text-sm font-medium">Orders</span>
+          </button>
+          <button 
+             onClick={() => setActiveTab('wishlist')}
+             className={`flex items-center gap-4 px-4 py-3 rounded-full transition-all group ${
+                activeTab === 'wishlist'
+                ? 'bg-primary text-dark-card shadow-sm' 
+                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white'
+            }`}
+          >
+            <span className={`material-symbols-outlined ${activeTab === 'wishlist' ? 'filled' : ''} group-hover:scale-110 transition-transform`}>favorite</span>
+            <span className="text-sm font-medium">Wishlist</span>
+          </button>
+        </nav>
+        <div className="mt-auto">
+          <button 
+             onClick={() => setActiveTab('settings')}
+             className={`flex w-full items-center gap-4 px-4 py-3 rounded-full transition-all ${
+                activeTab === 'settings'
+                ? 'bg-dark-card dark:bg-white text-white dark:text-dark-card shadow-sm' 
+                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white'
+            }`}
+          >
+            <span className={`material-symbols-outlined ${activeTab === 'settings' ? 'filled' : ''}`}>settings</span>
+            <span className="text-sm font-medium">Settings</span>
+          </button>
+          <div className="mt-6 p-4 rounded-xl bg-[#f4f4e6] dark:bg-[#2a2a1f] flex items-center gap-3 cursor-pointer hover:opacity-80 transition">
+            <div className="bg-center bg-no-repeat bg-cover rounded-full size-10 shadow-inner" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCV0P0n26NrEzk4SuLUnm-0X62VOsXWODzfetdRcxNXuoYA6-JhRjZmslV1B1IJDvzyfo8Rm7O0CzfauyIWTZ5bLsWTNlwwnufGYKVfWSNviwqXQIkZT6YKsyR-rNPfYmvUnSSCmiBBIe_exUzyBdEkj6tU3RjP7yL57Z8lLnPCOAUViNiPAlf3lRHi8kYYrlGXNsfHkUepZg-EpGaYbTVy6OPt8Krx8bTNFja2cGQZjDbz05_AV9_rnL2piVRUc9Cd9QC2sR-TDKY')" }}></div>
+            <div className="flex flex-col text-left">
+              <span className="text-xs font-bold text-dark-card dark:text-white">Alex Doe</span>
+              <span className="text-[10px] text-olive-text uppercase tracking-wide">Premium User</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col h-full overflow-y-auto scroll-smooth custom-scrollbar">
+        {renderContent()}
       </main>
     </div>
   );
