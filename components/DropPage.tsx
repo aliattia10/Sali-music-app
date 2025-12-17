@@ -4,10 +4,25 @@ import { ViewState } from '../types';
 
 interface DropPageProps {
   onNavigate: (view: ViewState) => void;
+  onAddToCart: (item: { id: number; name: string; size: string; price: number; image: string }) => void;
+  cartCount: number;
 }
 
-const DropPage: React.FC<DropPageProps> = ({ onNavigate }) => {
+const DropPage: React.FC<DropPageProps> = ({ onNavigate, onAddToCart, cartCount }) => {
   const [selectedSize, setSelectedSize] = useState('M');
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAddToCart = () => {
+    setIsAdding(true);
+    onAddToCart({
+      id: 1,
+      name: "The 'Midnight City' Drop",
+      size: selectedSize,
+      price: 45.00,
+      image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBLxW_NjGmNlyoOdSdLF9q7ffanbCDIUL5wpmePL5tpND6kynceWM48gzLGGZKDYQv_F2-HbTiau4sZSrIhyGViVRL27pFuE64hPUzqBFT7pVnaoOduPF-ngicPGOPJDxa-ZUDI3Koau8FDWlD8sk5uULTOoNE8dOrWBUfPQMGIbJGlAMl47NoBetaqhLFkissHGH6fZkiWuxcrgu_z2xsiYIUmRgPO_mhP0HGU8VRTHYWfNwPjqHP4BcuBpKO2Vd947TQe_3d6nHY"
+    });
+    setTimeout(() => setIsAdding(false), 1000);
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -25,9 +40,16 @@ const DropPage: React.FC<DropPageProps> = ({ onNavigate }) => {
           <div className="flex items-center gap-4">
             <ThemeToggle />
             
-            <button className="relative group p-2 rounded-full hover:bg-[#e5e5e0] dark:hover:bg-[#3a3a2e] transition-colors">
+            <button 
+              onClick={() => onNavigate('dashboard')}
+              className="relative group p-2 rounded-full hover:bg-[#e5e5e0] dark:hover:bg-[#3a3a2e] transition-colors"
+            >
               <span className="material-symbols-outlined">shopping_bag</span>
-              <span className="absolute top-0 right-0 size-4 bg-primary text-black text-[10px] font-bold flex items-center justify-center rounded-full">0</span>
+              {cartCount > 0 && (
+                <span className="absolute top-0 right-0 size-4 bg-primary text-black text-[10px] font-bold flex items-center justify-center rounded-full animate-in zoom-in">
+                  {cartCount}
+                </span>
+              )}
             </button>
           </div>
         </div>
@@ -175,9 +197,16 @@ const DropPage: React.FC<DropPageProps> = ({ onNavigate }) => {
           </div>
 
           <div className="mt-auto pt-6 flex flex-col gap-4">
-            <button className="w-full bg-primary hover:bg-[#e6e205] text-black h-16 rounded-full font-bold text-lg uppercase tracking-wider flex items-center justify-between px-8 shadow-[0_4px_0_0_rgba(0,0,0,1)] active:shadow-none active:translate-y-[4px] transition-all">
-              <span>Secure Drop</span>
-              <span className="material-symbols-outlined">arrow_forward</span>
+            <button 
+              onClick={handleAddToCart}
+              disabled={isAdding}
+              className="w-full bg-primary hover:bg-[#e6e205] text-black h-16 rounded-full font-bold text-lg uppercase tracking-wider flex items-center justify-between px-8 shadow-[0_4px_0_0_rgba(0,0,0,1)] active:shadow-none active:translate-y-[4px] transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
+            >
+              <span className="flex items-center gap-2">
+                {isAdding ? 'Adding...' : 'Secure Drop'}
+                {isAdding && <span className="material-symbols-outlined animate-spin">sync</span>}
+              </span>
+              <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">shopping_bag</span>
             </button>
             <div className="text-center">
               <p className="text-xs opacity-60">Ships within 2-3 business days. Free returns on domestic orders.</p>
