@@ -15,6 +15,23 @@ interface DashboardProps {
 type DashboardTab = 'home' | 'profile' | 'orders' | 'wishlist' | 'settings' | 'cart';
 type CheckoutStep = 'cart' | 'details' | 'success';
 
+const CROSS_SELL_ITEMS = [
+  {
+    id: 101,
+    name: 'Beanie',
+    size: 'OS',
+    price: 25.00,
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAqWZFM3_lJIWdS6DyxkZkpBD1klo8bY4Q5eEVzhe3_Hq7JrbtfMywzqhA350-VQB509LZgwOzFp-8jov5zIm0xSCNfRUG25oNWFbbEIxvgNzUcED85cXXm_htvdQK_AJ0y-YReVfRGBiAx5YlQutQAkwcSWsJ5hxUKWvmA3yX1mAlTttb2vyL_B-6JZAhwi0fP7URwEyFZ3D9raqxLT4SvGWtHpSa2BV9qmJBUjxWPSC68lus31k2kHSj54XTY_DOlvPDXuizRylU"
+  },
+  {
+    id: 102,
+    name: 'Socks',
+    size: 'OS',
+    price: 15.00,
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAhYo3scpbmGKT9FOjKgnt4RVQ86V24C1b21D7lZQFTDacGvAaQk4-hcjW3Gg-PMOjMuizTErlxl5TJPCcjI0JrBn7nRFpl2F_b-gGAgdnOxtF9pdwaWgKRAXMuYnl-UpE8O2BEyqu0KEyEstxF6-bM4X8FxojOX2uPJ_HGXeyXIAmRWUVbMFol7SXO4XiWIQXFuSoLLtQ34jlh0W5DfDj0GaVTWYdPnck1s3RFHpUwB_VCWYUDRv8-c3G1lG8zessnnn6zqZ1lw3M"
+  }
+];
+
 const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuantity, removeItem, setCartItems }) => {
   const [activeTab, setActiveTab] = useState<DashboardTab>('home');
   const [checkoutStep, setCheckoutStep] = useState<CheckoutStep>('cart');
@@ -198,30 +215,38 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
                                   Complete your fit
                                 </p>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div className="bg-white dark:bg-[#1c1c0d] p-3 rounded-2xl border border-gray-100 dark:border-gray-800 flex items-center gap-3 cursor-pointer hover:border-primary transition-colors group">
-                                        <div className="size-16 bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden">
-                                           <div className="size-full bg-cover bg-center group-hover:scale-110 transition-transform" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAqWZFM3_lJIWdS6DyxkZkpBD1klo8bY4Q5eEVzhe3_Hq7JrbtfMywzqhA350-VQB509LZgwOzFp-8jov5zIm0xSCNfRUG25oNWFbbEIxvgNzUcED85cXXm_htvdQK_AJ0y-YReVfRGBiAx5YlQutQAkwcSWsJ5hxUKWvmA3yX1mAlTttb2vyL_B-6JZAhwi0fP7URwEyFZ3D9raqxLT4SvGWtHpSa2BV9qmJBUjxWPSC68lus31k2kHSj54XTY_DOlvPDXuizRylU')" }}></div>
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <span className="font-bold text-sm text-dark-card dark:text-white">Beanie</span>
-                                            <span className="text-xs text-gray-500 font-mono">$25.00</span>
-                                        </div>
-                                        <button className="ml-auto size-8 rounded-full bg-dark-card dark:bg-white text-white dark:text-black flex items-center justify-center hover:bg-primary dark:hover:bg-primary hover:text-black transition-colors">
-                                            <span className="material-symbols-outlined text-sm">add</span>
-                                        </button>
-                                    </div>
-                                    <div className="bg-white dark:bg-[#1c1c0d] p-3 rounded-2xl border border-gray-100 dark:border-gray-800 flex items-center gap-3 cursor-pointer hover:border-primary transition-colors group">
-                                        <div className="size-16 bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden">
-                                          <div className="size-full bg-cover bg-center group-hover:scale-110 transition-transform" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAhYo3scpbmGKT9FOjKgnt4RVQ86V24C1b21D7lZQFTDacGvAaQk4-hcjW3Gg-PMOjMuizTErlxl5TJPCcjI0JrBn7nRFpl2F_b-gGAgdnOxtF9pdwaWgKRAXMuYnl-UpE8O2BEyqu0KEyEstxF6-bM4X8FxojOX2uPJ_HGXeyXIAmRWUVbMFol7SXO4XiWIQXFuSoLLtQ34jlh0W5DfDj0GaVTWYdPnck1s3RFHpUwB_VCWYUDRv8-c3G1lG8zessnnn6zqZ1lw3M')" }}></div>
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <span className="font-bold text-sm text-dark-card dark:text-white">Socks</span>
-                                            <span className="text-xs text-gray-500 font-mono">$15.00</span>
-                                        </div>
-                                        <button className="ml-auto size-8 rounded-full bg-dark-card dark:bg-white text-white dark:text-black flex items-center justify-center hover:bg-primary dark:hover:bg-primary hover:text-black transition-colors">
-                                            <span className="material-symbols-outlined text-sm">add</span>
-                                        </button>
-                                    </div>
+                                    {CROSS_SELL_ITEMS.map(item => {
+                                        const inCart = cartItems.some(ci => ci.id === item.id);
+                                        return (
+                                            <div key={item.id} className="bg-white dark:bg-[#1c1c0d] p-3 rounded-2xl border border-gray-100 dark:border-gray-800 flex items-center gap-3 cursor-pointer hover:border-primary transition-colors group">
+                                                <div className="size-16 bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden shrink-0">
+                                                   <div className="size-full bg-cover bg-center group-hover:scale-110 transition-transform" style={{ backgroundImage: `url('${item.image}')` }}></div>
+                                                </div>
+                                                <div className="flex flex-col min-w-0">
+                                                    <span className="font-bold text-sm text-dark-card dark:text-white truncate">{item.name}</span>
+                                                    <span className="text-xs text-gray-500 font-mono">${item.price.toFixed(2)}</span>
+                                                </div>
+                                                {inCart ? (
+                                                    <button 
+                                                        onClick={(e) => { e.stopPropagation(); removeItem(item.id, item.size); }}
+                                                        className="ml-auto shrink-0 size-8 rounded-full bg-red-100 text-red-500 dark:bg-red-900/30 dark:text-red-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors"
+                                                    >
+                                                        <span className="material-symbols-outlined text-sm">delete</span>
+                                                    </button>
+                                                ) : (
+                                                    <button 
+                                                        onClick={(e) => { 
+                                                            e.stopPropagation(); 
+                                                            setCartItems(prev => [...prev, { ...item, quantity: 1 }]); 
+                                                        }}
+                                                        className="ml-auto shrink-0 size-8 rounded-full bg-dark-card dark:bg-white text-white dark:text-black flex items-center justify-center hover:bg-primary dark:hover:bg-primary hover:text-black transition-colors"
+                                                    >
+                                                        <span className="material-symbols-outlined text-sm">add</span>
+                                                    </button>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                              </div>
                         </div>

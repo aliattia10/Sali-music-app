@@ -12,6 +12,14 @@ interface DropPageProps {
 const DropPage: React.FC<DropPageProps> = ({ onNavigate, onAddToCart, cartCount }) => {
   const [selectedSize, setSelectedSize] = useState('M');
   const [isAdding, setIsAdding] = useState(false);
+  const [activeView, setActiveView] = useState<'front' | 'texture' | 'back' | '360'>('front');
+
+  const IMAGES = {
+    front: "https://lh3.googleusercontent.com/aida-public/AB6AXuAlMZtPI2sxduJfYldYCXgcV2PrB7XQlpt9smIqtLslJ_NbmkpPBt6I6ShjjAEGiM2O_X-210rzsbCcmYc_QOGej5Tza9o1SDMYOBc8Zn_DKtjuoxxN9BWVO-qhrN7VxS1MvR2XPCvK2pmzLKtFWLemCB_s7CVSWqWGyA1s0JWuQA0VV7rsd5XvQj0Olbyq39yOnOEGRiLs5a_XzgTi6xCwhg5xAYvnbXDV1PWGuvqhunV3hblGdBdeuPzwhZJFQKgbkFAvCksdCug",
+    texture: "https://lh3.googleusercontent.com/aida-public/AB6AXuAhYo3scpbmGKT9FOjKgnt4RVQ86V24C1b21D7lZQFTDacGvAaQk4-hcjW3Gg-PMOjMuizTErlxl5TJPCcjI0JrBn7nRFpl2F_b-gGAgdnOxtF9pdwaWgKRAXMuYnl-UpE8O2BEyqu0KEyEstxF6-bM4X8FxojOX2uPJ_HGXeyXIAmRWUVbMFol7SXO4XiWIQXFuSoLLtQ34jlh0W5DfDj0GaVTWYdPnck1s3RFHpUwB_VCWYUDRv8-c3G1lG8zessnnn6zqZ1lw3M",
+    back: "https://lh3.googleusercontent.com/aida-public/AB6AXuDUsAH8MeqhfFe5UZxZNK9Mg3__jU7zeAMfII4llK7wJ8BrvSgvvA663MHjPgIkcsScab-DFSud_nc_DJtRo3URHhBk_RJwZWCzc4P8fhzDTvxQhqqrAokAw1dkLMNX7yRpnjkIHADyT3NjdLMrpIAVy9sv6703TmiBIFbwzmf9jW8dES0DmqSCInNJaDCqZ619MXlLx7NM3JzHlgHfbv2W_Wtf-Qa4MgdljBg12amnfHOWKJfSL8uRTMkcyix45UHKIHOtxZbpIUo",
+    '360': "https://lh3.googleusercontent.com/aida-public/AB6AXuBLxW_NjGmNlyoOdSdLF9q7ffanbCDIUL5wpmePL5tpND6kynceWM48gzLGGZKDYQv_F2-HbTiau4sZSrIhyGViVRL27pFuE64hPUzqBFT7pVnaoOduPF-ngicPGOPJDxa-ZUDI3Koau8FDWlD8sk5uULTOoNE8dOrWBUfPQMGIbJGlAMl47NoBetaqhLFkissHGH6fZkiWuxcrgu_z2xsiYIUmRgPO_mhP0HGU8VRTHYWfNwPjqHP4BcuBpKO2Vd947TQe_3d6nHY"
+  };
 
   const handleAddToCart = () => {
     setIsAdding(true);
@@ -63,33 +71,53 @@ const DropPage: React.FC<DropPageProps> = ({ onNavigate, onAddToCart, cartCount 
             <span className="px-3 py-1 rounded-full bg-primary text-black text-xs font-bold uppercase tracking-wider animate-pulse">Live Now</span>
           </div>
           
-          <div className="relative flex-grow flex items-center justify-center min-h-[400px] lg:min-h-[600px] bg-gray-100 dark:bg-neutral-900 rounded-xl overflow-hidden group">
+          <div className="relative flex-grow flex items-center justify-center min-h-[400px] lg:min-h-[600px] bg-white dark:bg-neutral-900 rounded-xl overflow-hidden group border border-gray-100 dark:border-gray-800">
             <div className="relative w-full h-full flex items-center justify-center transition-transform duration-700 ease-out group-hover:scale-105">
-              <img 
-                alt="Black oversized t-shirt" 
-                className="max-h-[80%] object-contain drop-shadow-2xl filter dark:brightness-90" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLxW_NjGmNlyoOdSdLF9q7ffanbCDIUL5wpmePL5tpND6kynceWM48gzLGGZKDYQv_F2-HbTiau4sZSrIhyGViVRL27pFuE64hPUzqBFT7pVnaoOduPF-ngicPGOPJDxa-ZUDI3Koau8FDWlD8sk5uULTOoNE8dOrWBUfPQMGIbJGlAMl47NoBetaqhLFkissHGH6fZkiWuxcrgu_z2xsiYIUmRgPO_mhP0HGU8VRTHYWfNwPjqHP4BcuBpKO2Vd947TQe_3d6nHY" 
-              />
+              {activeView === '360' ? (
+                <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 dark:bg-neutral-900">
+                  <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600 mb-4 animate-spin" style={{ animationDuration: '3s' }}>rotate_right</span>
+                  <p className="text-gray-500 dark:text-gray-400 font-medium uppercase tracking-widest text-sm">Interactive 360 View</p>
+                  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Drag to rotate</p>
+                </div>
+              ) : (
+                <img 
+                  alt="Product view" 
+                  className="max-h-[80%] object-contain drop-shadow-2xl filter dark:brightness-90" 
+                  src={IMAGES[activeView]} 
+                />
+              )}
             </div>
-            <div className="absolute bottom-6 right-6 p-3 bg-white dark:bg-black rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute bottom-6 right-6 p-3 bg-white dark:bg-black rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer hover:scale-110">
               <span className="material-symbols-outlined">zoom_in</span>
             </div>
           </div>
 
           <div className="grid grid-cols-4 gap-4 mt-4">
-            <button className="aspect-square rounded-lg bg-gray-100 dark:bg-neutral-900 overflow-hidden border-2 border-black dark:border-primary">
-              <img alt="Front" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlMZtPI2sxduJfYldYCXgcV2PrB7XQlpt9smIqtLslJ_NbmkpPBt6I6ShjjAEGiM2O_X-210rzsbCcmYc_QOGej5Tza9o1SDMYOBc8Zn_DKtjuoxxN9BWVO-qhrN7VxS1MvR2XPCvK2pmzLKtFWLemCB_s7CVSWqWGyA1s0JWuQA0VV7rsd5XvQj0Olbyq39yOnOEGRiLs5a_XzgTi6xCwhg5xAYvnbXDV1PWGuvqhunV3hblGdBdeuPzwhZJFQKgbkFAvCksdCug"/>
+            <button 
+              onClick={() => setActiveView('front')}
+              className={`aspect-square rounded-lg bg-white dark:bg-neutral-900 overflow-hidden border-2 transition-all ${activeView === 'front' ? 'border-black dark:border-primary' : 'border-transparent opacity-60 hover:opacity-100'}`}
+            >
+              <img alt="Front" className="w-full h-full object-cover" src={IMAGES.front}/>
             </button>
-            <button className="aspect-square rounded-lg bg-gray-100 dark:bg-neutral-900 overflow-hidden opacity-60 hover:opacity-100 transition-opacity">
-              <img alt="Texture" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhYo3scpbmGKT9FOjKgnt4RVQ86V24C1b21D7lZQFTDacGvAaQk4-hcjW3Gg-PMOjMuizTErlxl5TJPCcjI0JrBn7nRFpl2F_b-gGAgdnOxtF9pdwaWgKRAXMuYnl-UpE8O2BEyqu0KEyEstxF6-bM4X8FxojOX2uPJ_HGXeyXIAmRWUVbMFol7SXO4XiWIQXFuSoLLtQ34jlh0W5DfDj0GaVTWYdPnck1s3RFHpUwB_VCWYUDRv8-c3G1lG8zessnnn6zqZ1lw3M"/>
+            <button 
+              onClick={() => setActiveView('texture')}
+              className={`aspect-square rounded-lg bg-white dark:bg-neutral-900 overflow-hidden border-2 transition-all ${activeView === 'texture' ? 'border-black dark:border-primary' : 'border-transparent opacity-60 hover:opacity-100'}`}
+            >
+              <img alt="Texture" className="w-full h-full object-cover" src={IMAGES.texture}/>
             </button>
-            <button className="aspect-square rounded-lg bg-gray-100 dark:bg-neutral-900 overflow-hidden opacity-60 hover:opacity-100 transition-opacity">
-              <img alt="Back" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUsAH8MeqhfFe5UZxZNK9Mg3__jU7zeAMfII4llK7wJ8BrvSgvvA663MHjPgIkcsScab-DFSud_nc_DJtRo3URHhBk_RJwZWCzc4P8fhzDTvxQhqqrAokAw1dkLMNX7yRpnjkIHADyT3NjdLMrpIAVy9sv6703TmiBIFbwzmf9jW8dES0DmqSCInNJaDCqZ619MXlLx7NM3JzHlgHfbv2W_Wtf-Qa4MgdljBg12amnfHOWKJfSL8uRTMkcyix45UHKIHOtxZbpIUo"/>
+            <button 
+              onClick={() => setActiveView('back')}
+              className={`aspect-square rounded-lg bg-white dark:bg-neutral-900 overflow-hidden border-2 transition-all ${activeView === 'back' ? 'border-black dark:border-primary' : 'border-transparent opacity-60 hover:opacity-100'}`}
+            >
+              <img alt="Back" className="w-full h-full object-cover" src={IMAGES.back}/>
             </button>
-            <div className="aspect-square rounded-lg bg-gray-100 dark:bg-neutral-900 flex flex-col items-center justify-center text-xs font-bold uppercase tracking-widest text-black/40 dark:text-white/40 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-              <span className="material-symbols-outlined mb-1">360</span>
+            <button 
+              onClick={() => setActiveView('360')}
+              className={`aspect-square rounded-lg flex flex-col items-center justify-center text-xs font-bold uppercase tracking-widest transition-all ${activeView === '360' ? 'text-black dark:text-white' : 'text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white'}`}
+            >
+              <span className="material-symbols-outlined mb-1 text-2xl">rotate_right</span>
               View 360
-            </div>
+            </button>
           </div>
         </section>
 
