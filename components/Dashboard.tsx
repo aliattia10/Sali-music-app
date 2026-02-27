@@ -629,7 +629,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
             className={`flex items-center gap-4 px-4 py-3 rounded-full transition-all shadow-sm group ${
                 activeTab === 'home' 
                 ? 'bg-primary text-dark-card' 
-                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white'
+                : 'text-black dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white'
             }`}
           >
             <span className={`material-symbols-outlined ${activeTab === 'home' ? 'filled' : ''} group-hover:scale-110 transition-transform`}>home</span>
@@ -641,7 +641,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
              className={`flex items-center gap-4 px-4 py-3 rounded-full transition-all group ${
                 activeTab === 'cart'
                 ? 'bg-primary text-dark-card shadow-sm' 
-                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white'
+                : 'text-black dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white'
             }`}
           >
             <div className="relative">
@@ -660,7 +660,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
              className={`flex items-center gap-4 px-4 py-3 rounded-full transition-all group ${
                 activeTab === 'profile'
                 ? 'bg-primary text-dark-card shadow-sm' 
-                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white'
+                : 'text-black dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white'
             }`}
           >
             <span className={`material-symbols-outlined ${activeTab === 'profile' ? 'filled' : ''} group-hover:scale-110 transition-transform`}>person</span>
@@ -671,7 +671,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
              className={`flex items-center gap-4 px-4 py-3 rounded-full transition-all group ${
                 activeTab === 'orders'
                 ? 'bg-primary text-dark-card shadow-sm' 
-                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white'
+                : 'text-black dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white'
             }`}
           >
             <span className={`material-symbols-outlined ${activeTab === 'orders' ? 'filled' : ''} group-hover:scale-110 transition-transform`}>list_alt</span>
@@ -682,7 +682,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
              className={`flex items-center gap-4 px-4 py-3 rounded-full transition-all group ${
                 activeTab === 'wishlist'
                 ? 'bg-primary text-dark-card shadow-sm' 
-                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white'
+                : 'text-black dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white'
             }`}
           >
             <span className={`material-symbols-outlined ${activeTab === 'wishlist' ? 'filled' : ''} group-hover:scale-110 transition-transform`}>favorite</span>
@@ -695,7 +695,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
              className={`flex w-full items-center gap-4 px-4 py-3 rounded-full transition-all ${
                 activeTab === 'settings'
                 ? 'bg-dark-card dark:bg-white text-white dark:text-dark-card shadow-sm' 
-                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white'
+                : 'text-black dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-dark-card dark:hover:text-white'
             }`}
           >
             <span className={`material-symbols-outlined ${activeTab === 'settings' ? 'filled' : ''}`}>settings</span>
