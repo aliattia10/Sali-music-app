@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ThemeToggle from './ThemeToggle';
+import Logo from './Logo';
 import { ViewState } from '../types';
 
 interface DropPageProps {
@@ -27,14 +28,13 @@ const DropPage: React.FC<DropPageProps> = ({ onNavigate, onAddToCart, cartCount 
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 border-b border-[#e5e5e0] dark:border-[#3a3a2e] bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md">
+      <nav className="sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md">
         <div className="px-4 md:px-8 py-4 flex items-center justify-between max-w-[1440px] mx-auto">
           <button 
             onClick={() => onNavigate('landing')} 
-            className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+            className="hover:opacity-80 transition-opacity"
           >
-            <span className="material-symbols-outlined text-3xl">equalizer</span>
-            <h1 className="text-xl font-bold tracking-tight uppercase">Salimusic</h1>
+            <Logo />
           </button>
           
           <div className="flex items-center gap-4">
@@ -42,7 +42,7 @@ const DropPage: React.FC<DropPageProps> = ({ onNavigate, onAddToCart, cartCount 
             
             <button 
               onClick={() => onNavigate('dashboard')}
-              className="relative group p-2 rounded-full hover:bg-[#e5e5e0] dark:hover:bg-[#3a3a2e] transition-colors"
+              className="relative group p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
             >
               <span className="material-symbols-outlined">shopping_bag</span>
               {cartCount > 0 && (
@@ -63,7 +63,7 @@ const DropPage: React.FC<DropPageProps> = ({ onNavigate, onAddToCart, cartCount 
             <span className="px-3 py-1 rounded-full bg-primary text-black text-xs font-bold uppercase tracking-wider animate-pulse">Live Now</span>
           </div>
           
-          <div className="relative flex-grow flex items-center justify-center min-h-[400px] lg:min-h-[600px] bg-[#f0f0eb] dark:bg-[#2a2a1f] rounded-xl overflow-hidden group">
+          <div className="relative flex-grow flex items-center justify-center min-h-[400px] lg:min-h-[600px] bg-gray-100 dark:bg-neutral-900 rounded-xl overflow-hidden group">
             <div className="relative w-full h-full flex items-center justify-center transition-transform duration-700 ease-out group-hover:scale-105">
               <img 
                 alt="Black oversized t-shirt" 
@@ -77,16 +77,16 @@ const DropPage: React.FC<DropPageProps> = ({ onNavigate, onAddToCart, cartCount 
           </div>
 
           <div className="grid grid-cols-4 gap-4 mt-4">
-            <button className="aspect-square rounded-lg bg-[#f0f0eb] dark:bg-[#2a2a1f] overflow-hidden border-2 border-black dark:border-primary">
+            <button className="aspect-square rounded-lg bg-gray-100 dark:bg-neutral-900 overflow-hidden border-2 border-black dark:border-primary">
               <img alt="Front" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlMZtPI2sxduJfYldYCXgcV2PrB7XQlpt9smIqtLslJ_NbmkpPBt6I6ShjjAEGiM2O_X-210rzsbCcmYc_QOGej5Tza9o1SDMYOBc8Zn_DKtjuoxxN9BWVO-qhrN7VxS1MvR2XPCvK2pmzLKtFWLemCB_s7CVSWqWGyA1s0JWuQA0VV7rsd5XvQj0Olbyq39yOnOEGRiLs5a_XzgTi6xCwhg5xAYvnbXDV1PWGuvqhunV3hblGdBdeuPzwhZJFQKgbkFAvCksdCug"/>
             </button>
-            <button className="aspect-square rounded-lg bg-[#f0f0eb] dark:bg-[#2a2a1f] overflow-hidden opacity-60 hover:opacity-100 transition-opacity">
+            <button className="aspect-square rounded-lg bg-gray-100 dark:bg-neutral-900 overflow-hidden opacity-60 hover:opacity-100 transition-opacity">
               <img alt="Texture" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhYo3scpbmGKT9FOjKgnt4RVQ86V24C1b21D7lZQFTDacGvAaQk4-hcjW3Gg-PMOjMuizTErlxl5TJPCcjI0JrBn7nRFpl2F_b-gGAgdnOxtF9pdwaWgKRAXMuYnl-UpE8O2BEyqu0KEyEstxF6-bM4X8FxojOX2uPJ_HGXeyXIAmRWUVbMFol7SXO4XiWIQXFuSoLLtQ34jlh0W5DfDj0GaVTWYdPnck1s3RFHpUwB_VCWYUDRv8-c3G1lG8zessnnn6zqZ1lw3M"/>
             </button>
-            <button className="aspect-square rounded-lg bg-[#f0f0eb] dark:bg-[#2a2a1f] overflow-hidden opacity-60 hover:opacity-100 transition-opacity">
+            <button className="aspect-square rounded-lg bg-gray-100 dark:bg-neutral-900 overflow-hidden opacity-60 hover:opacity-100 transition-opacity">
               <img alt="Back" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUsAH8MeqhfFe5UZxZNK9Mg3__jU7zeAMfII4llK7wJ8BrvSgvvA663MHjPgIkcsScab-DFSud_nc_DJtRo3URHhBk_RJwZWCzc4P8fhzDTvxQhqqrAokAw1dkLMNX7yRpnjkIHADyT3NjdLMrpIAVy9sv6703TmiBIFbwzmf9jW8dES0DmqSCInNJaDCqZ619MXlLx7NM3JzHlgHfbv2W_Wtf-Qa4MgdljBg12amnfHOWKJfSL8uRTMkcyix45UHKIHOtxZbpIUo"/>
             </button>
-            <div className="aspect-square rounded-lg bg-[#f0f0eb] dark:bg-[#2a2a1f] flex flex-col items-center justify-center text-xs font-bold uppercase tracking-widest text-black/40 dark:text-white/40 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+            <div className="aspect-square rounded-lg bg-gray-100 dark:bg-neutral-900 flex flex-col items-center justify-center text-xs font-bold uppercase tracking-widest text-black/40 dark:text-white/40 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
               <span className="material-symbols-outlined mb-1">360</span>
               View 360
             </div>
@@ -97,7 +97,7 @@ const DropPage: React.FC<DropPageProps> = ({ onNavigate, onAddToCart, cartCount 
         <section className="lg:w-1/2 p-4 md:p-8 lg:pl-0 flex flex-col gap-6">
           <div className="space-y-4 border-b border-black/10 dark:border-white/10 pb-6">
             <div className="flex justify-between items-start">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-[0.9] tracking-tighter uppercase">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-black leading-[0.9] tracking-tighter uppercase">
                 The 'Midnight City'<br />Drop
               </h1>
               <span className="text-xl md:text-2xl font-bold font-mono">$45.00</span>
@@ -111,7 +111,7 @@ const DropPage: React.FC<DropPageProps> = ({ onNavigate, onAddToCart, cartCount 
             </div>
           </div>
 
-          <div className="bg-[#f0f0eb] dark:bg-[#2a2a1f] rounded-xl p-4 flex items-center gap-4 group hover:bg-[#e6e6df] dark:hover:bg-[#333325] transition-colors cursor-pointer ring-1 ring-black/5 dark:ring-white/5">
+          <div className="bg-gray-100 dark:bg-neutral-900 rounded-xl p-4 flex items-center gap-4 group hover:bg-gray-200 dark:hover:bg-neutral-800 transition-colors cursor-pointer ring-1 ring-black/5 dark:ring-white/5">
             <div className="relative size-16 shrink-0 rounded-lg overflow-hidden">
               <img alt="Album Cover" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDTpdi7o1xktswLRlF2SN7zc88NM_GAgRi9ShASo_qEUPmqd3DNkKQWYzoURtKIq32CDKRNqSRMZUCynrOm2jK8CSqIeKbtbpWw8QQwaw3v9zHuStfBOJCrGGKFB8wFnKCGaxf9aU4KWthZ_BX8teCTSEExHku_lZcOLeTlufQdhq3wXocyrfbeHTqapSmJfu11matBWw1xAFhbz8yEbJjJ5pNN5f94tGuAIs8hoaxYB4SQujcheATQmBLq-eZu_H0KMgZeBIkM8M"/>
               <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
@@ -120,7 +120,7 @@ const DropPage: React.FC<DropPageProps> = ({ onNavigate, onAddToCart, cartCount 
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex justify-between items-baseline mb-1">
-                <h3 className="font-bold text-lg truncate">Midnight City</h3>
+                <h3 className="font-display font-bold text-lg truncate uppercase tracking-tight">Midnight City</h3>
                 <span className="text-xs font-mono opacity-60">04:03</span>
               </div>
               <p className="text-sm font-medium opacity-60 truncate">M83 • Hurry Up, We're Dreaming</p>
@@ -136,7 +136,7 @@ const DropPage: React.FC<DropPageProps> = ({ onNavigate, onAddToCart, cartCount 
 
           <div className="py-4">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="font-bold uppercase tracking-wider text-sm opacity-80">Select Size</h3>
+              <h3 className="font-display font-bold uppercase tracking-widest text-sm opacity-80">Select Size</h3>
               <button className="text-xs font-mono underline opacity-60 hover:opacity-100">Size Guide</button>
             </div>
             <div className="grid grid-cols-1 gap-2">
@@ -200,7 +200,7 @@ const DropPage: React.FC<DropPageProps> = ({ onNavigate, onAddToCart, cartCount 
             <button 
               onClick={handleAddToCart}
               disabled={isAdding}
-              className="w-full bg-primary hover:bg-[#e6e205] text-black h-16 rounded-full font-bold text-lg uppercase tracking-wider flex items-center justify-between px-8 shadow-[0_4px_0_0_rgba(0,0,0,1)] active:shadow-none active:translate-y-[4px] transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
+              className="w-full bg-primary hover:bg-primary-hover text-black h-16 rounded-full font-bold text-lg uppercase tracking-wider flex items-center justify-between px-8 shadow-[0_4px_0_0_rgba(0,0,0,1)] active:shadow-none active:translate-y-[4px] transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
             >
               <span className="flex items-center gap-2">
                 {isAdding ? 'Adding...' : 'Secure Drop'}

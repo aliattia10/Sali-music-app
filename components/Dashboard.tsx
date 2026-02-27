@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import ThemeToggle from './ThemeToggle';
+import Logo from './Logo';
 import { ViewState } from '../types';
 import { CartItem } from '../App';
 
@@ -52,7 +53,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
               <span className="material-symbols-outlined text-6xl text-green-500">check_circle</span>
             </div>
             <div className="text-center space-y-2">
-              <h2 className="text-3xl md:text-5xl font-black text-dark-card dark:text-white uppercase tracking-tight">Order Confirmed</h2>
+              <h2 className="text-3xl md:text-5xl font-display font-black text-dark-card dark:text-white uppercase tracking-tighter">Order Confirmed</h2>
               <p className="text-gray-500 dark:text-gray-400 font-medium text-lg">Order #88291 is on its way.</p>
             </div>
             <div className="bg-white dark:bg-[#1c1c0d] p-8 rounded-[2rem] border border-gray-100 dark:border-gray-800 w-full max-w-md shadow-sm">
@@ -104,7 +105,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
               <span className="material-symbols-outlined text-5xl">shopping_cart_off</span>
             </div>
             <div className="space-y-2">
-              <h2 className="text-2xl md:text-3xl font-bold text-dark-card dark:text-white uppercase tracking-tight">Your bag is empty</h2>
+              <h2 className="text-2xl md:text-3xl font-display font-black text-dark-card dark:text-white uppercase tracking-tighter">Your bag is empty</h2>
               <p className="text-gray-500 dark:text-gray-400 max-w-xs mx-auto">Looks like you haven't added anything to your collection yet.</p>
             </div>
             <button 
@@ -129,7 +130,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
                     {checkoutStep === 'details' ? 'Back to Bag' : 'Back Home'}
                 </button>
                 <div className="flex items-center justify-between">
-                  <h2 className="text-dark-card dark:text-white text-3xl md:text-5xl font-black leading-tight tracking-tight">
+                  <h2 className="text-dark-card dark:text-white text-3xl md:text-5xl font-display font-black leading-tight tracking-tighter uppercase">
                     {checkoutStep === 'cart' ? 'Your Bag' : 'Checkout'}
                   </h2>
                   <div className="md:hidden">
@@ -155,7 +156,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
                                   <div className="flex flex-col flex-1 py-2">
                                       <div className="flex justify-between items-start">
                                           <div>
-                                              <h3 className="font-bold text-xl text-dark-card dark:text-white">{item.name}</h3>
+                                              <h3 className="font-display font-bold text-xl text-dark-card dark:text-white uppercase tracking-tight">{item.name}</h3>
                                               <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Limited Edition • Drop 003</p>
                                           </div>
                                           <button 
@@ -229,7 +230,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
                         <div className="flex flex-col gap-6 animate-in fade-in duration-300">
                             {/* Shipping */}
                             <div className="flex flex-col gap-4">
-                                <h3 className="font-bold text-lg text-dark-card dark:text-white flex items-center gap-2">
+                                <h3 className="font-display font-bold text-lg text-dark-card dark:text-white flex items-center gap-2 uppercase tracking-tight">
                                     <span className="size-6 rounded-full bg-primary text-black flex items-center justify-center text-xs">1</span>
                                     Shipping Information
                                 </h3>
@@ -244,7 +245,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
 
                             {/* Payment */}
                             <div className="flex flex-col gap-4 pt-4 border-t border-gray-100 dark:border-gray-800">
-                                <h3 className="font-bold text-lg text-dark-card dark:text-white flex items-center gap-2">
+                                <h3 className="font-display font-bold text-lg text-dark-card dark:text-white flex items-center gap-2 uppercase tracking-tight">
                                     <span className="size-6 rounded-full bg-primary text-black flex items-center justify-center text-xs">2</span>
                                     Payment Method
                                 </h3>
@@ -287,7 +288,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
                 {/* Right Column: Summary */}
                 <div className="lg:col-span-5">
                     <div className="sticky top-8 bg-white dark:bg-[#1c1c0d] p-6 rounded-[2rem] border border-gray-100 dark:border-gray-800 flex flex-col gap-6 shadow-xl shadow-gray-200/50 dark:shadow-none">
-                        <h3 className="text-xl font-bold text-dark-card dark:text-white">Order Summary</h3>
+                        <h3 className="text-xl font-display font-bold text-dark-card dark:text-white uppercase tracking-tight">Order Summary</h3>
                         
                         <div className="flex flex-col gap-3 pb-6 border-b border-gray-100 dark:border-gray-800">
                             <div className="flex justify-between text-gray-500 dark:text-gray-400">
@@ -359,7 +360,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
             <div className="flex flex-col gap-2 pt-8">
                 <p className="text-olive-text text-sm font-medium tracking-widest uppercase">Preferences</p>
                 <div className="flex items-center justify-between">
-                  <h2 className="text-dark-card dark:text-white text-3xl md:text-5xl font-black leading-tight tracking-tight">Settings</h2>
+                  <h2 className="text-dark-card dark:text-white text-3xl md:text-5xl font-display font-black leading-tight tracking-tighter uppercase">Settings</h2>
                   <div className="md:hidden">
                     <ThemeToggle />
                   </div>
@@ -368,7 +369,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
 
             {/* Account Settings */}
             <section className="flex flex-col gap-6">
-                <h3 className="text-xl font-bold text-dark-card dark:text-white border-b border-gray-200 dark:border-gray-800 pb-2">Account</h3>
+                <h3 className="text-xl font-display font-bold text-dark-card dark:text-white border-b border-gray-200 dark:border-gray-800 pb-2 uppercase tracking-tight">Account</h3>
                 <div className="bg-white dark:bg-[#1c1c0d] p-6 rounded-[2rem] border border-gray-100 dark:border-gray-800 flex flex-col md:flex-row gap-8 items-start shadow-sm">
                     <div className="flex flex-col gap-4 items-center self-center md:self-start">
                         <div className="size-32 rounded-full bg-gray-200 dark:bg-gray-800 bg-cover bg-center border-4 border-background-light dark:border-background-dark shadow-inner" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCV0P0n26NrEzk4SuLUnm-0X62VOsXWODzfetdRcxNXuoYA6-JhRjZmslV1B1IJDvzyfo8Rm7O0CzfauyIWTZ5bLsWTNlwwnufGYKVfWSNviwqXQIkZT6YKsyR-rNPfYmvUnSSCmiBBIe_exUzyBdEkj6tU3RjP7yL57Z8lLnPCOAUViNiPAlf3lRHi8kYYrlGXNsfHkUepZg-EpGaYbTVy6OPt8Krx8bTNFja2cGQZjDbz05_AV9_rnL2piVRUc9Cd9QC2sR-TDKY')" }}></div>
@@ -403,7 +404,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
 
              {/* Notifications */}
              <section className="flex flex-col gap-6">
-                <h3 className="text-xl font-bold text-dark-card dark:text-white border-b border-gray-200 dark:border-gray-800 pb-2">Notifications</h3>
+                <h3 className="text-xl font-display font-bold text-dark-card dark:text-white border-b border-gray-200 dark:border-gray-800 pb-2 uppercase tracking-tight">Notifications</h3>
                  <div className="bg-white dark:bg-[#1c1c0d] p-6 rounded-[2rem] border border-gray-100 dark:border-gray-800 flex flex-col gap-6 shadow-sm">
                     {[
                         { title: 'Drop Alerts', desc: 'Get notified 24h before a new collection drops.', checked: true },
@@ -426,7 +427,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
 
              {/* Danger Zone */}
              <section className="flex flex-col gap-6 pb-12">
-                <h3 className="text-xl font-bold text-red-500 border-b border-gray-200 dark:border-gray-800 pb-2">Danger Zone</h3>
+                <h3 className="text-xl font-display font-bold text-red-500 border-b border-gray-200 dark:border-gray-800 pb-2 uppercase tracking-tight">Danger Zone</h3>
                 <div className="bg-red-50 dark:bg-red-900/10 p-6 rounded-[2rem] border border-red-100 dark:border-red-900/20 flex flex-col md:flex-row justify-between items-center gap-4">
                     <div className="flex flex-col text-center md:text-left">
                          <span className="font-bold text-red-600 dark:text-red-400">Delete Account</span>
@@ -445,7 +446,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
         <header className="w-full px-6 py-8 md:px-12 flex justify-between items-end">
           <div className="flex flex-col gap-2">
             <p className="text-olive-text text-sm font-medium tracking-widest uppercase">Your mix is ready</p>
-            <h2 className="text-dark-card dark:text-white text-3xl md:text-5xl font-black leading-tight tracking-tight">Welcome back, Alex.</h2>
+            <h2 className="text-dark-card dark:text-white text-3xl md:text-5xl font-display font-black leading-tight tracking-tighter uppercase">Welcome back, Alex.</h2>
           </div>
           <div className="flex gap-4 items-center">
             <ThemeToggle className="bg-white dark:bg-[#1c1c0d] border border-gray-200 dark:border-gray-800 shadow-sm" />
@@ -468,7 +469,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
             {/* Left Column: Top Songs */}
             <div className="lg:col-span-7 flex flex-col gap-6">
               <div className="flex items-center justify-between">
-                <h3 className="text-xl font-bold text-dark-card dark:text-white flex items-center gap-2">
+                <h3 className="text-xl font-display font-bold text-dark-card dark:text-white flex items-center gap-2 uppercase tracking-tight">
                   <span className="material-symbols-outlined filled text-olive-text">graphic_eq</span>
                   Your Top Tracks
                 </h3>
@@ -492,7 +493,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
                       </div>
                     </div>
                     <div className="flex flex-col grow">
-                      <h4 className="font-bold text-dark-card dark:text-white text-lg group-hover:text-primary transition-colors">{track.title}</h4>
+                      <h4 className="font-display font-bold text-dark-card dark:text-white text-lg group-hover:text-primary transition-colors uppercase tracking-tight">{track.title}</h4>
                       <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">{track.artist}</p>
                     </div>
                     <span className="text-sm font-bold text-gray-400 pr-2">{track.time}</span>
@@ -504,7 +505,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
             {/* Right Column: Next Drop */}
             <div className="lg:col-span-5 flex flex-col gap-6">
               <div className="flex items-center justify-between">
-                <h3 className="text-xl font-bold text-dark-card dark:text-white flex items-center gap-2">
+                <h3 className="text-xl font-display font-bold text-dark-card dark:text-white flex items-center gap-2 uppercase tracking-tight">
                   <span className="material-symbols-outlined filled text-olive-text">timer</span>
                   Next Drop
                 </h3>
@@ -518,7 +519,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
                     <span className="size-2 bg-primary rounded-full animate-pulse"></span>
                     <span className="text-primary text-xs font-bold uppercase tracking-wider">Limited Edition</span>
                   </div>
-                  <h2 className="text-3xl font-black leading-tight mt-2 cursor-default">Drop 004: <br /><span className="text-primary">The Synthwave Collection</span></h2>
+                  <h2 className="text-3xl font-display font-black leading-tight mt-2 cursor-default uppercase tracking-tighter">Drop 004: <br /><span className="text-primary">The Synthwave Collection</span></h2>
                 </div>
 
                 <div className="relative z-10 flex-1 flex items-center justify-center py-6">
@@ -577,7 +578,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
             </div>
             <div className="col-span-1 md:col-span-2 bg-white dark:bg-[#1c1c0d] border border-gray-100 dark:border-gray-800 p-6 rounded-[2rem] flex items-center justify-between relative overflow-hidden group shadow-sm">
               <div className="relative z-10 flex flex-col gap-2">
-                <h4 className="text-lg font-bold text-dark-card dark:text-white">Invite Friends</h4>
+                <h4 className="text-lg font-display font-bold text-dark-card dark:text-white uppercase tracking-tight">Invite Friends</h4>
                 <p className="text-sm text-gray-500 max-w-[200px]">Get 10% off your next order for every friend who joins.</p>
                 <button className="mt-2 px-4 py-2 bg-dark-card dark:bg-white text-white dark:text-black text-xs font-bold uppercase rounded-full self-start hover:bg-primary dark:hover:bg-primary hover:text-dark-card transition shadow-md">Copy Invite Link</button>
               </div>
@@ -593,15 +594,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, cartItems, updateQuan
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background-light dark:bg-background-dark">
       {/* Sidebar Navigation */}
-      <aside className="hidden md:flex flex-col w-64 h-full p-6 border-r border-gray-100 dark:border-gray-800 bg-[#fcfcf8] dark:bg-[#1c1c0d]">
+      <aside className="hidden md:flex flex-col w-64 h-full p-6 border-r border-gray-100 dark:border-gray-800 bg-white dark:bg-neutral-900">
         <div className="flex items-center gap-3 px-2 mb-10 cursor-pointer" onClick={() => onNavigate('landing')}>
-          <div className="size-10 rounded-full bg-dark-card dark:bg-primary flex items-center justify-center text-primary dark:text-black">
-            <span className="material-symbols-outlined">equalizer</span>
-          </div>
-          <div>
-            <h1 className="text-dark-card dark:text-white text-lg font-bold leading-tight">Salimusic</h1>
-            <p className="text-olive-text text-xs font-medium uppercase tracking-wider">Dashboard</p>
-          </div>
+          <Logo />
         </div>
         <nav className="flex flex-col gap-2 flex-1">
           <button 

@@ -102,7 +102,7 @@ const App: React.FC = () => {
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      <div className="font-display min-h-screen bg-background-light dark:bg-background-dark text-neutral-900 dark:text-white transition-colors duration-300">
+      <div className="font-sans min-h-screen bg-background-light dark:bg-background-dark text-neutral-900 dark:text-white transition-colors duration-300">
         
         {/* Navigation Indicator Overlay for Add to Cart */}
         {lastAddedId && (
